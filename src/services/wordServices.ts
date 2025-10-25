@@ -25,11 +25,18 @@ export const addWord = async (newWord: Word): Promise<void> => {
         if (word.type === 'verb' && newWord.type === 'verb') {
             return word.infinitiv === newWord.infinitiv;
         }
+        if (word.type === 'adverb' && newWord.type === 'adverb') {
+            return word.word === newWord.word;
+        }
         return false;
     });
 
     if (isDuplicate) {
-        const wordName = newWord.type === 'noun' ? newWord.singular : newWord.infinitiv;
+        let wordName = '';
+        if (newWord.type === 'noun') wordName = newWord.singular;
+        if (newWord.type === 'verb') wordName = newWord.infinitiv;
+        if (newWord.type === 'adverb') wordName = newWord.word;
+
         throw new Error(`Das Wort "${wordName}" ist bereits vorhanden.`);
     }
 

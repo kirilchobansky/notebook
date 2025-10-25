@@ -50,6 +50,12 @@ export const useWordList = () => {
                     word.perfekt?.toLowerCase().includes(lowerSearch) ||
                     word.translation.toLowerCase().includes(lowerSearch);
             }
+            if (word.type === 'adverb') {
+                return (
+                    word.word.toLowerCase().includes(lowerSearch) ||
+                    word.translation.toLowerCase().includes(lowerSearch)
+                );
+            }
             return false;
         });
     }, [words, searchTerm]);

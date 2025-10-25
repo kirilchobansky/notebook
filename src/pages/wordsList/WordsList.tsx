@@ -3,6 +3,7 @@ import styles from './WordsList.module.css';
 import { useWordList } from '../../hooks/useWordList';
 import NounRow from '../../components/rows/nounRow/NounRow';
 import VerbRow from '../../components/rows/verbRow/VerbRow';
+import AdverbRow from '../../components/rows/adverbRow/AdverbRow';
 
 const WordListPage: React.FC = () => {
     const {
@@ -54,9 +55,9 @@ const WordListPage: React.FC = () => {
                         ) : (
                             filteredWords.map((word) => (
                                 <tr key={word.id}>
-                                    {/* 5. Render the specific row component */}
                                     {word.type === 'noun' && <NounRow word={word} />}
                                     {word.type === 'verb' && <VerbRow word={word} />}
+                                    {word.type === 'adverb' && <AdverbRow word={word} />}
 
                                     <td>
                                         <button

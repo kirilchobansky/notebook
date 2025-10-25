@@ -17,4 +17,9 @@ export interface VerbWord extends BaseWord {
     perfekt: string | null;
 }
 
-export type Word = NounWord | VerbWord; 
+export interface AdverbWord extends BaseWord {
+    type: 'adverb';
+    word: string;
+}
+
+export type Word = NounWord | VerbWord | AdverbWord; 

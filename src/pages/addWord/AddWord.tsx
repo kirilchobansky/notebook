@@ -3,7 +3,7 @@ import styles from './AddWord.module.css';
 import NounForm from '../../components/forms/nounForm/NounForm';
 import VerbForm from '../../components/forms/verbForm/VerbForm';
 // import AdjectiveForm from '../../components/forms/adjectiveForm/AdjectiveForm';
-// import AdverbForm from '../../components/forms/adverbForm/AdverbForm';
+import AdverbForm from '../../components/forms/adverbForm/AdverbForm';
 
 const AddWordPage: React.FC = () => {
     const { wordType } = useParams();
@@ -16,7 +16,7 @@ const AddWordPage: React.FC = () => {
                 // return <AdjectiveForm />;
                 return <p>Adjektiv-Formular kommt hier hin...</p>;
             case 'adverb':
-                // return <AdverbForm />;
+                return <AdverbForm />;
                 return <p>Adverb-Formular kommt hier hin...</p>;
             case 'verb':
                 return <VerbForm />;
