@@ -1,17 +1,20 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
-import "./App.css";
-import Home from "./pages/home/Home";
-import Noun from "./pages/noun/Noun";
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import './App.css';
+import MainLayout from './components/mainLayout/MainLayout';
+import AddWordPage from './pages/addWord/AddWord';
+import WordsListPage from './pages/wordsList/WordsList';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/add/noun" element={<Noun />} />
-      </Routes >
-    </Router >
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Navigate replace to="/add/noun" />} />
+          <Route path="add/:wordType" element={<AddWordPage />} />
+          <Route path="/list" element={<WordsListPage />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 

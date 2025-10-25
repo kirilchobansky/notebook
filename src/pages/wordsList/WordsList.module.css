@@ -1,0 +1,79 @@
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.container h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* This is the container for all your word cards */
+.listContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* This is each individual word "card" */
+.wordCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background-color: var(--secondary-bg);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.wordCard:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary-blue);
+}
+
+.wordDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.word {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.article {
+  font-size: 1.1rem;
+  color: var(--primary-blue);
+  font-weight: 500;
+}
+
+.wordType {
+  font-size: 0.9rem;
+  color: var(--text-color);
+  opacity: 0.7;
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+.deleteButton {
+  background-color: #e53e3e; /* Red color for delete */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.deleteButton:hover {
+  background-color: #c53030;
+}

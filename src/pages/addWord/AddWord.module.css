@@ -1,0 +1,46 @@
+.container {
+  max-width: 800px; /* Limits the width for better readability */
+  margin: 0 auto; /* Centers the container */
+  padding: 1rem;
+}
+
+.container h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--primary-blue); /* Blue title */
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* This will be the form itself */
+.wordForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Space between each form field */
+}
+
+/* A container for a label + input */
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; /* Space between label and input */
+}
+
+.fieldGroup label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+/* Make inputs take full width of the form */
+.fieldGroup input[type="text"] {
+  width: 100%;
+  box-sizing: border-box; /* Ensures padding doesn't break layout */
+}
+
+.submitButton {
+  /* This class is for your "Add Word" button */
+  margin-top: 1rem;
+  align-self: flex-start; /* Aligns button to the left */
+}

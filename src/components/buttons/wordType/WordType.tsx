@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./Noun.module.css";
+import styles from "./WordType.module.css";
 
 interface WordTypeButtonProps {
     type: "noun" | "verb" | "adjective" | "adverb";

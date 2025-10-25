@@ -1,0 +1,39 @@
+/* This is the container for all your buttons */
+.buttonsContainer {
+  display: flex;
+  flex-wrap: wrap; /* Allows buttons to stack on smaller screens */
+  justify-content: center;
+  gap: 1.5rem; /* Space between the buttons */
+}
+
+/* This is the style for each individual button */
+.wordButton {
+  /* Sizing and Spacing */
+  padding: 1.25rem 2.5rem;
+  min-width: 200px; /* Makes all buttons a consistent minimum width */
+
+  /* Font */
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ffffff; /* White text on the blue button */
+  
+  /* Appearance */
+  background-color: var(--primary-blue); /* Your main blue */
+  border: none;
+  border-radius: 12px; /* Rounded corners */
+  
+  /* Interaction */
+  cursor: pointer;
+  transition: all 0.3s ease; /* Smooth transition for hover */
+  box-shadow: 0 4px 15px rgba(0, 122, 255, 0.2); /* A subtle blue glow */
+}
+
+.wordButton:hover {
+  background-color: var(--primary-blue-hover); /* Your darker hover blue */
+  transform: translateY(-3px); /* Lifts the button slightly */
+  box-shadow: 0 6px 20px rgba(0, 122, 255, 0.3); /* A more intense glow */
+}
+
+.wordButton:active {
+  transform: translateY(-1px); /* Click effect */
+}

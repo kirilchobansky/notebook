@@ -1,0 +1,42 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem; /* Padding on the left/right */
+  height: 60px;
+  background-color: var(--secondary-bg); /* Dark bg from your theme */
+  border-bottom: 2px solid var(--primary-blue); /* Blue accent line */
+  width: 100%;
+  box-sizing: border-box;
+  flex-shrink: 0; /* Prevents header from shrinking */
+}
+
+.navLinks {
+  display: flex;
+  gap: 0.5rem; /* Small space between word buttons */
+}
+
+.rightSection {
+  /* This holds the "List" button */
+}
+
+.navButton {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-color); /* Light text */
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+}
+
+.navButton:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Subtle hover */
+}
+
+/* This styles the button blue when its route is active */
+.navButton.active {
+  background-color: var(--primary-blue);
+  color: white;
+  font-weight: 600;
+}
