@@ -89,3 +89,15 @@
 .deleteButton:hover {
   background-color: #c53030;
 }
+
+.verbForms {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.95rem;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+.verbForms span {
+  font-style: italic;
+}

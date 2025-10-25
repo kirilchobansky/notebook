@@ -8,7 +8,7 @@ interface Word {
     type: string;
     article?: string;
     singular?: string;
-    plural?: string;
+    plural?: string | null;
     translation: string;
 }
 
@@ -83,8 +83,6 @@ const NounForm: React.FC = () => {
         e.preventDefault();
         setError(null);
 
-
-        // Format and validate article
         const formattedArticle = article.trim().toLowerCase();
         if (!['der', 'die', 'das'].includes(formattedArticle)) {
             setError('Artikel muss "der", "die" oder "das" sein.');
@@ -92,7 +90,6 @@ const NounForm: React.FC = () => {
             return;
         }
 
-        // Validate singular
         const formattedSingular = singular.trim();
         if (!formattedSingular) {
             setError('Singular darf nicht leer sein.');
@@ -100,15 +97,11 @@ const NounForm: React.FC = () => {
             return;
         }
 
-        // --- 2. FORMATTING ---
-
         const finalArticle = formattedArticle;
         const finalSingular = capitalize(formattedSingular);
 
-        // Capitalize plural if it exists, otherwise create default
-        const finalPlural = capitalize(plural.trim()) || finalSingular + 'e';
+        const finalPlural = capitalize(plural.trim()) || null;
 
-        // --- 3. DUPLICATE CHECK (Async) ---
         let existingWords: Word[] = [];
         try {
             existingWords = await store.get<Word[]>('words') || [];
@@ -127,15 +120,13 @@ const NounForm: React.FC = () => {
             return;
         }
 
-        // --- 4. SAVE ---
-
         const newNoun: Word = {
             id: crypto.randomUUID(),
             type: 'noun',
             article: finalArticle,
             singular: finalSingular,
             plural: finalPlural,
-            translation: translation.replace('Fehler:', ''), // Don't save error text
+            translation: translation.replace('Fehler:', ''),
         };
 
         try {
@@ -145,7 +136,6 @@ const NounForm: React.FC = () => {
 
             console.log('Word saved!', newNoun);
 
-            // Clear form
             setArticle('');
             setSingular('');
             setPlural('');
