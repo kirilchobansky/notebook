@@ -1,0 +1,69 @@
+.wordForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Space between each form field */
+  max-width: 600px; /* Optional: keeps the form from getting too wide */
+}
+
+/* A container for a label + input/select */
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; /* Space between label and input */
+}
+
+.fieldGroup label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+/* Style inputs and select to match your global theme */
+.fieldGroup input[type="text"],
+.fieldGroup select {
+  width: 100%;
+  box-sizing: border-box; /* Ensures padding doesn't break layout */
+  background-color: var(--secondary-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.fieldGroup input[type="text"]:focus,
+.fieldGroup select:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
+}
+
+/* Style for the default select option */
+.fieldGroup select option {
+  background: var(--secondary-bg);
+  color: var(--text-color);
+}
+
+.submitButton {
+  /* Use the global button styles */
+  background-color: var(--primary-blue);
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  /* Form-specific styles */
+  margin-top: 1rem;
+  align-self: flex-start; /* Aligns button to the left */
+}
+
+.submitButton:hover {
+  background-color: var(--primary-blue-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 122, 255, 0.2);
+}
