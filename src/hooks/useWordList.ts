@@ -56,6 +56,12 @@ export const useWordList = () => {
                     word.translation.toLowerCase().includes(lowerSearch)
                 );
             }
+            if (word.type === 'adjective') {
+                return (
+                    word.word.toLowerCase().includes(lowerSearch) ||
+                    word.translation.toLowerCase().includes(lowerSearch)
+                );
+            }
             return false;
         });
     }, [words, searchTerm]);
@@ -65,6 +71,7 @@ export const useWordList = () => {
         searchTerm,
         setSearchTerm,
         filteredWords,
-        handleDelete
+        handleDelete,
+        words
     };
 };

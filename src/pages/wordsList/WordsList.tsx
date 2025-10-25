@@ -4,6 +4,7 @@ import { useWordList } from '../../hooks/useWordList';
 import NounRow from '../../components/rows/nounRow/NounRow';
 import VerbRow from '../../components/rows/verbRow/VerbRow';
 import AdverbRow from '../../components/rows/adverbRow/AdverbRow';
+import AdjectiveRow from '../../components/rows/adjectiveRow/AdjectiveRow';
 
 const WordListPage: React.FC = () => {
     const {
@@ -11,7 +12,8 @@ const WordListPage: React.FC = () => {
         searchTerm,
         setSearchTerm,
         filteredWords,
-        handleDelete
+        handleDelete,
+        words
     } = useWordList();
 
     if (loading) {
@@ -22,6 +24,7 @@ const WordListPage: React.FC = () => {
         <div className={styles.container}>
             <div className={styles.header}>
                 <h1>Deine Wortliste</h1>
+                <span>({words.length})</span>
                 <input
                     type="text"
                     placeholder="Suchen..."
@@ -58,6 +61,7 @@ const WordListPage: React.FC = () => {
                                     {word.type === 'noun' && <NounRow word={word} />}
                                     {word.type === 'verb' && <VerbRow word={word} />}
                                     {word.type === 'adverb' && <AdverbRow word={word} />}
+                                    {word.type === 'adjective' && <AdjectiveRow word={word} />}
 
                                     <td>
                                         <button

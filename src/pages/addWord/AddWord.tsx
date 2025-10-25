@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import styles from './AddWord.module.css';
 import NounForm from '../../components/forms/nounForm/NounForm';
 import VerbForm from '../../components/forms/verbForm/VerbForm';
-// import AdjectiveForm from '../../components/forms/adjectiveForm/AdjectiveForm';
+import AdjectiveForm from '../../components/forms/adjectiveForm/AdjectiveForm';
 import AdverbForm from '../../components/forms/adverbForm/AdverbForm';
 
 const AddWordPage: React.FC = () => {
@@ -13,11 +13,9 @@ const AddWordPage: React.FC = () => {
             case 'noun':
                 return <NounForm />;
             case 'adjective':
-                // return <AdjectiveForm />;
-                return <p>Adjektiv-Formular kommt hier hin...</p>;
+                return <AdjectiveForm />;
             case 'adverb':
                 return <AdverbForm />;
-                return <p>Adverb-Formular kommt hier hin...</p>;
             case 'verb':
                 return <VerbForm />;
             default:

@@ -22,4 +22,9 @@ export interface AdverbWord extends BaseWord {
     word: string;
 }
 
-export type Word = NounWord | VerbWord | AdverbWord; 
+export interface AdjectiveWord extends BaseWord {
+    type: 'adjective';
+    word: string;
+}
+
+export type Word = NounWord | VerbWord | AdverbWord | AdjectiveWord; 

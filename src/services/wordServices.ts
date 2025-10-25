@@ -28,6 +28,9 @@ export const addWord = async (newWord: Word): Promise<void> => {
         if (word.type === 'adverb' && newWord.type === 'adverb') {
             return word.word === newWord.word;
         }
+        if (word.type === 'adjective' && newWord.type === 'adjective') {
+            return word.word === newWord.word;
+        }
         return false;
     });
 
@@ -36,6 +39,7 @@ export const addWord = async (newWord: Word): Promise<void> => {
         if (newWord.type === 'noun') wordName = newWord.singular;
         if (newWord.type === 'verb') wordName = newWord.infinitiv;
         if (newWord.type === 'adverb') wordName = newWord.word;
+        if (newWord.type === 'adjective') wordName = newWord.word;
 
         throw new Error(`Das Wort "${wordName}" ist bereits vorhanden.`);
     }
