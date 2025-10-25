@@ -4,16 +4,28 @@
   padding: 1rem;
 }
 
-.container h1 {
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.header h1 {
   font-size: 2.2rem;
   font-weight: 700;
   color: var(--primary-blue);
-  border-bottom: 2px solid var(--border-color);
-  padding-bottom: 1rem;
-  margin-bottom: 2rem;
 }
 
-/* This is the container for all your word cards */
+
+.header span {
+  font-size: 2rem;
+  color: var(--text-color);
+  opacity: 0.7;
+  
+}
+
 .listContainer {
   display: flex;
   flex-direction: column;

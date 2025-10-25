@@ -1,9 +1,7 @@
 import React, { useState, useRef, KeyboardEvent, FocusEvent } from 'react';
-import styles from './nounForm.module.css';
+import styles from './NounForm.module.css';
 import { invoke } from '@tauri-apps/api/core';
 import { LazyStore } from '@tauri-apps/plugin-store';
-
-const store = new LazyStore('wortliste.dat');
 
 interface Word {
     id: string;
@@ -14,13 +12,21 @@ interface Word {
     translation: string;
 }
 
+const store = new LazyStore('wortliste.dat');
+
+const capitalize = (s: string) => {
+    if (s.length === 0) return '';
+    return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+};
+
 const NounForm: React.FC = () => {
     const [article, setArticle] = useState('');
     const [singular, setSingular] = useState('');
     const [plural, setPlural] = useState('');
-
     const [translation, setTranslation] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+
+    const [error, setError] = useState<string | null>(null);
 
     const articleRef = useRef<HTMLInputElement>(null);
     const singularRef = useRef<HTMLInputElement>(null);
@@ -64,9 +70,7 @@ const NounForm: React.FC = () => {
                 from: 'de',
                 to: 'bg'
             });
-
             setTranslation(translatedText);
-
         } catch (error) {
             console.error("Translation error from Rust:", error);
             setTranslation(`Fehler: ${error}`);
@@ -77,30 +81,71 @@ const NounForm: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError(null);
 
-        if (!article || !singular) {
-            alert('Bitte Artikel und Singular ausfüllen.');
+
+        // Format and validate article
+        const formattedArticle = article.trim().toLowerCase();
+        if (!['der', 'die', 'das'].includes(formattedArticle)) {
+            setError('Artikel muss "der", "die" oder "das" sein.');
+            articleRef.current?.focus();
             return;
         }
 
-        const newNoun = {
+        // Validate singular
+        const formattedSingular = singular.trim();
+        if (!formattedSingular) {
+            setError('Singular darf nicht leer sein.');
+            singularRef.current?.focus();
+            return;
+        }
+
+        // --- 2. FORMATTING ---
+
+        const finalArticle = formattedArticle;
+        const finalSingular = capitalize(formattedSingular);
+
+        // Capitalize plural if it exists, otherwise create default
+        const finalPlural = capitalize(plural.trim()) || finalSingular + 'e';
+
+        // --- 3. DUPLICATE CHECK (Async) ---
+        let existingWords: Word[] = [];
+        try {
+            existingWords = await store.get<Word[]>('words') || [];
+        } catch (err) {
+            setError(`Fehler beim Laden der Wörter: ${err}`);
+            return;
+        }
+
+        const isDuplicate = existingWords.some(
+            word => word.singular === finalSingular && word.article === finalArticle
+        );
+
+        if (isDuplicate) {
+            setError(`Das Wort "${finalArticle} ${finalSingular}" ist bereits vorhanden.`);
+            singularRef.current?.focus();
+            return;
+        }
+
+        // --- 4. SAVE ---
+
+        const newNoun: Word = {
             id: crypto.randomUUID(),
             type: 'noun',
-            article,
-            singular,
-            plural: plural || null,
-            translation: translation,
+            article: finalArticle,
+            singular: finalSingular,
+            plural: finalPlural,
+            translation: translation.replace('Fehler:', ''), // Don't save error text
         };
 
         try {
-            const existingWords = await store.get<Word[]>('words') || [];
-
             const updatedWords = [...existingWords, newNoun];
-
             await store.set('words', updatedWords);
-
             await store.save();
 
+            console.log('Word saved!', newNoun);
+
+            // Clear form
             setArticle('');
             setSingular('');
             setPlural('');
@@ -109,15 +154,14 @@ const NounForm: React.FC = () => {
 
         } catch (error) {
             console.error("Failed to save word:", error);
-            // alert('Wort konnte nicht gespeichert werden!');
-            alert(`Wort konnte nicht gespeichert werden! Fehler: ${error}`);
+            setError(`Wort konnte nicht gespeichert werden! Fehler: ${error}`);
         }
     };
 
     return (
         <form className={styles.wordForm} onSubmit={handleSubmit}>
 
-
+            {/* --- Artikel (Article) --- */}
             <div className={styles.fieldGroup}>
                 <label htmlFor="article">Artikel</label>
                 <input
@@ -160,12 +204,12 @@ const NounForm: React.FC = () => {
                     onKeyDown={(e) => handleKeyDown(e, 2)}
                     value={plural}
                     onChange={(e) => setPlural(e.target.value)}
-                    placeholder="z.B. Tische"
+                    placeholder="z.B. Tische (Standard: Singular + 'e')"
                     autoComplete="off"
                 />
             </div>
 
-            {/* --- Translation --- */}
+            {/* --- Translation Field --- */}
             <div className={styles.fieldGroup}>
                 <label htmlFor="translation">Übersetzung (Bulgarisch)</label>
                 <input
@@ -181,6 +225,12 @@ const NounForm: React.FC = () => {
                 />
             </div>
 
+            {/* --- NEW: Error Message Area --- */}
+            <div className={styles.errorContainer}>
+                {error && <p className={styles.errorMessage}>{error}</p>}
+            </div>
+
+            {/* --- Submit Button --- */}
             <button type="submit" className={styles.submitButton}>
                 Nomen hinzufügen
             </button>
