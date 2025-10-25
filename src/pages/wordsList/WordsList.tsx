@@ -1,44 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import styles from './WordsList.module.css';
 import { LazyStore } from '@tauri-apps/plugin-store';
-import { Word, NounWord, VerbWord } from '../../types/words'; // <-- 1. Import types
+import { Word } from '../../types/words';
 
 const store = new LazyStore('wortliste.dat');
 
-/**
- * Helper component to render Noun details
- */
-const NounCard: React.FC<{ word: NounWord }> = ({ word }) => (
-    <>
-        <span className={styles.article}>{word.article}</span>
-        <span className={styles.word}>
-            {word.singular}
-            {word.plural ? ` / ${word.plural}` : ''}
-        </span>
-        <span className={styles.translation}>{word.translation}</span>
-        <span className={styles.wordType}>{word.type}</span>
-    </>
-);
-
-/**
- * Helper component to render Verb details
- */
-const VerbCard: React.FC<{ word: VerbWord }> = ({ word }) => (
-    <>
-        {/* You may want to add new CSS styles for verbs */}
-        <span className={styles.word}>{word.infinitiv}</span>
-        <span className={styles.verbForms}>
-            {word.praeteritum && <span>Prät: {word.praeteritum}</span>}
-            {word.perfekt && <span>Perf: {word.perfekt}</span>}
-        </span>
-        <span className={styles.translation}>{word.translation}</span>
-        <span className={styles.wordType}>{word.type}</span>
-    </>
-);
-
 const WordListPage: React.FC = () => {
-    const [words, setWords] = useState<Word[]>([]); // <-- 2. Use base "Word" type
+    const [words, setWords] = useState<Word[]>([]);
     const [loading, setLoading] = useState(true);
+
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         const loadWords = async () => {
@@ -53,6 +24,34 @@ const WordListPage: React.FC = () => {
         };
         loadWords();
     }, []);
+
+    const filteredWords = useMemo(() => {
+        const lowerSearch = searchTerm.toLowerCase();
+
+        if (!lowerSearch) {
+            return [...words].reverse();
+        }
+
+        return [...words].reverse().filter(word => {
+            if (word.type === 'noun') {
+                return (
+                    word.singular.toLowerCase().includes(lowerSearch) ||
+                    word.plural?.toLowerCase().includes(lowerSearch) ||
+                    word.article.toLowerCase().includes(lowerSearch) ||
+                    word.translation.toLowerCase().includes(lowerSearch)
+                );
+            }
+            if (word.type === 'verb') {
+                return (
+                    word.infinitiv.toLowerCase().includes(lowerSearch) ||
+                    word.praeteritum?.toLowerCase().includes(lowerSearch) ||
+                    word.perfekt?.toLowerCase().includes(lowerSearch) ||
+                    word.translation.toLowerCase().includes(lowerSearch)
+                );
+            }
+            return false;
+        });
+    }, [words, searchTerm]);
 
     const handleDelete = async (idToDelete: string) => {
         const updatedWords = words.filter(word => word.id !== idToDelete);
@@ -72,27 +71,75 @@ const WordListPage: React.FC = () => {
 
     return (
         <div className={styles.container}>
-            <h1>Deine Wortliste</h1>
-            <div className={styles.listContainer}>
-                {words.length === 0 ? (
-                    <p>Du hast noch keine Wörter gespeichert.</p>
-                ) : (
-                    words.map((word) => (
-                        <div key={word.id} className={styles.wordCard}>
-                            <div className={styles.wordDetails}>
-                                {/* --- 3. Render based on word type --- */}
-                                {word.type === 'noun' && <NounCard word={word} />}
-                                {word.type === 'verb' && <VerbCard word={word} />}
-                            </div>
-                            <button
-                                className={styles.deleteButton}
-                                onClick={() => handleDelete(word.id)}
-                            >
-                                Löschen
-                            </button>
-                        </div>
-                    ))
-                )}
+            <div className={styles.header}>
+                <h1>Deine Wortliste</h1>
+                <input
+                    type="text"
+                    placeholder="Suchen..."
+                    className={styles.searchBar}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+            </div>
+
+            <div className={styles.tableContainer}>
+                <table className={styles.wordTable}>
+                    <thead>
+                        <tr>
+                            <th>Wort</th>
+                            <th>Übersetzung</th>
+                            <th>Formen</th>
+                            <th>Typ</th>
+                            <th>Aktion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredWords.length === 0 ? (
+                            <tr>
+                                <td colSpan={5}>
+                                    {searchTerm
+                                        ? 'Keine Wörter gefunden.'
+                                        : 'Du hast noch keine Wörter gespeichert.'
+                                    }
+                                </td>
+                            </tr>
+                        ) : (
+                            filteredWords.map((word) => (
+                                <tr key={word.id}>
+                                    {word.type === 'noun' && (
+                                        <>
+                                            <td><strong>{word.article} {word.singular}</strong></td>
+                                            <td>{word.translation}</td>
+                                            <td>{word.plural || '—'}</td>
+                                            <td>Nomen</td>
+                                        </>
+                                    )}
+                                    {word.type === 'verb' && (
+                                        <>
+                                            <td><strong>{word.infinitiv}</strong></td>
+                                            <td>{word.translation}</td>
+                                            <td>
+                                                <div className={styles.verbForms}>
+                                                    <span>{word.praeteritum || '—'}</span>
+                                                    <span>{word.perfekt || '—'}</span>
+                                                </div>
+                                            </td>
+                                            <td>Verb</td>
+                                        </>
+                                    )}
+                                    <td>
+                                        <button
+                                            className={styles.deleteButton}
+                                            onClick={() => handleDelete(word.id)}
+                                        >
+                                            Löschen
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
             </div>
         </div>
     );
