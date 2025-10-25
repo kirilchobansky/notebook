@@ -8,7 +8,6 @@ const Header: React.FC = () => {
 
     return (
         <header className={styles.header}>
-            {/* Left side: Word type navigation */}
             <nav className={styles.navLinks}>
                 <NavLink to="/add/noun" className={getNavLinkClass}>
                     Nomen
@@ -24,7 +23,6 @@ const Header: React.FC = () => {
                 </NavLink>
             </nav>
 
-            {/* Right side: App tools (like your list) */}
             <div className={styles.rightSection}>
                 <NavLink to="/list" className={getNavLinkClass}>
                     Wortliste (List)

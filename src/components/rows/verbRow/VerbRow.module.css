@@ -1,0 +1,8 @@
+.verbForms {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+  font-style: italic;
+  opacity: 0.8;
+}

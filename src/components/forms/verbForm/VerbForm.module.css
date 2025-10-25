@@ -1,15 +1,14 @@
 .wordForm {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem; /* Space between each form field */
-  max-width: 600px; /* Optional: keeps the form from getting too wide */
+  gap: 1.5rem; 
+  max-width: 600px; 
 }
 
-/* A container for a label + input/select */
 .fieldGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem; /* Space between label and input */
+  gap: 0.5rem; 
 }
 
 .fieldGroup label {
@@ -18,11 +17,9 @@
   color: var(--text-color);
 }
 
-/* Style inputs and select to match your global theme */
-.fieldGroup input[type="text"],
-.fieldGroup select {
+.fieldGroup input[type="text"] {
   width: 100%;
-  box-sizing: border-box; /* Ensures padding doesn't break layout */
+  box-sizing: border-box; 
   background-color: var(--secondary-bg);
   color: var(--text-color);
   border: 1px solid var(--border-color);
@@ -32,21 +29,13 @@
   transition: border-color 0.2s;
 }
 
-.fieldGroup input[type="text"]:focus,
-.fieldGroup select:focus {
+.fieldGroup input[type="text"]:focus {
   outline: none;
   border-color: var(--primary-blue);
   box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
 }
 
-/* Style for the default select option */
-.fieldGroup select option {
-  background: var(--secondary-bg);
-  color: var(--text-color);
-}
-
 .submitButton {
-  /* Use the global button styles */
   background-color: var(--primary-blue);
   color: white;
   font-weight: 600;
@@ -56,10 +45,8 @@
   padding: 12px 20px;
   cursor: pointer;
   transition: all 0.2s ease;
-  
-  /* Form-specific styles */
   margin-top: 1rem;
-  align-self: flex-start; /* Aligns button to the left */
+  align-self: flex-start;
 }
 
 .submitButton:hover {
@@ -68,15 +55,16 @@
   box-shadow: 0 4px 10px rgba(0, 122, 255, 0.2);
 }
 
+/* Error Message Styles */
 .errorContainer {
-  min-height: 1.5em; /* Holds space for one line of text */
-  margin-top: -0.5rem; /* Tucks it closer to the fields above */
+  min-height: 1.5em;
+  margin-top: -0.5rem;
   margin-bottom: 0.5rem;
 }
 
 .errorMessage {
-  color: #e53e3e; /* A bright, clear red */
+  color: #e53e3e; 
   font-size: 0.95rem;
   font-weight: 500;
-  margin: 0; /* Remove default <p> margins */
+  margin: 0;
 }

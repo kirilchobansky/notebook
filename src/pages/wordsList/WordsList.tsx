@@ -1,69 +1,17 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React from 'react';
 import styles from './WordsList.module.css';
-import { LazyStore } from '@tauri-apps/plugin-store';
-import { Word } from '../../types/words';
-
-const store = new LazyStore('wortliste.dat');
+import { useWordList } from '../../hooks/useWordList';
+import NounRow from '../../components/rows/nounRow/NounRow';
+import VerbRow from '../../components/rows/verbRow/VerbRow';
 
 const WordListPage: React.FC = () => {
-    const [words, setWords] = useState<Word[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    const [searchTerm, setSearchTerm] = useState('');
-
-    useEffect(() => {
-        const loadWords = async () => {
-            try {
-                const storedWords = await store.get<Word[]>('words') || [];
-                setWords(storedWords);
-            } catch (error) {
-                console.error("Failed to load words:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        loadWords();
-    }, []);
-
-    const filteredWords = useMemo(() => {
-        const lowerSearch = searchTerm.toLowerCase();
-
-        if (!lowerSearch) {
-            return [...words].reverse();
-        }
-
-        return [...words].reverse().filter(word => {
-            if (word.type === 'noun') {
-                return (
-                    word.singular.toLowerCase().includes(lowerSearch) ||
-                    word.plural?.toLowerCase().includes(lowerSearch) ||
-                    word.article.toLowerCase().includes(lowerSearch) ||
-                    word.translation.toLowerCase().includes(lowerSearch)
-                );
-            }
-            if (word.type === 'verb') {
-                return (
-                    word.infinitiv.toLowerCase().includes(lowerSearch) ||
-                    word.praeteritum?.toLowerCase().includes(lowerSearch) ||
-                    word.perfekt?.toLowerCase().includes(lowerSearch) ||
-                    word.translation.toLowerCase().includes(lowerSearch)
-                );
-            }
-            return false;
-        });
-    }, [words, searchTerm]);
-
-    const handleDelete = async (idToDelete: string) => {
-        const updatedWords = words.filter(word => word.id !== idToDelete);
-        try {
-            await store.set('words', updatedWords);
-            await store.save();
-            setWords(updatedWords);
-        } catch (error) {
-            console.error('Failed to delete word:', error);
-            alert('Fehler beim Löschen des Wortes.');
-        }
-    };
+    const {
+        loading,
+        searchTerm,
+        setSearchTerm,
+        filteredWords,
+        handleDelete
+    } = useWordList();
 
     if (loading) {
         return <h1>Lade Wörter...</h1>;
@@ -106,27 +54,10 @@ const WordListPage: React.FC = () => {
                         ) : (
                             filteredWords.map((word) => (
                                 <tr key={word.id}>
-                                    {word.type === 'noun' && (
-                                        <>
-                                            <td><strong>{word.article} {word.singular}</strong></td>
-                                            <td>{word.translation}</td>
-                                            <td>{word.plural || '—'}</td>
-                                            <td>Nomen</td>
-                                        </>
-                                    )}
-                                    {word.type === 'verb' && (
-                                        <>
-                                            <td><strong>{word.infinitiv}</strong></td>
-                                            <td>{word.translation}</td>
-                                            <td>
-                                                <div className={styles.verbForms}>
-                                                    <span>{word.praeteritum || '—'}</span>
-                                                    <span>{word.perfekt || '—'}</span>
-                                                </div>
-                                            </td>
-                                            <td>Verb</td>
-                                        </>
-                                    )}
+                                    {/* 5. Render the specific row component */}
+                                    {word.type === 'noun' && <NounRow word={word} />}
+                                    {word.type === 'verb' && <VerbRow word={word} />}
+
                                     <td>
                                         <button
                                             className={styles.deleteButton}
