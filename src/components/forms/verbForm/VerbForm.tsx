@@ -2,7 +2,7 @@ import React, { useState, useRef, KeyboardEvent } from 'react';
 import styles from './verbForm.module.css';
 import { VerbWord } from '../../../types/words';
 import { addWord } from '../../../services/wordServices';
-import { useTranslation } from '../../../hooks/useTranslation'; // <-- 1. Import hook
+import { useTranslation } from '../../../hooks/useTranslation';
 
 const VerbForm: React.FC = () => {
     const [infinitiv, setInfinitiv] = useState('');
@@ -47,9 +47,15 @@ const VerbForm: React.FC = () => {
         setError(null);
 
         const finalInfinitiv = infinitiv.trim().toLowerCase();
-        if (!finalInfinitiv) {
-            setError('Infinitiv darf nicht leer sein.');
+        if (!finalInfinitiv || !perfekt || !praeteritum) {
+            setError('Ohne leere lücken bitte.');
             infinitivRef.current?.focus();
+            return;
+        }
+
+        if (!translation || translation.startsWith('Fehler:') || isLoading) {
+            setError('Übersetzung darf nicht leer sein.');
+            translationRef.current?.focus();
             return;
         }
 
@@ -82,41 +88,40 @@ const VerbForm: React.FC = () => {
     return (
         <form className={styles.wordForm} onSubmit={handleSubmit}>
 
-            {/* --- Infinitiv --- */}
             <div className={styles.fieldGroup}>
                 <label htmlFor="infinitiv">Infinitiv</label>
                 <input
                     type="text" id="infinitiv" ref={infinitivRef}
                     onKeyDown={(e) => handleKeyDown(e, 0)}
-                    onBlur={(e) => triggerTranslation(e.target.value)} // <-- 4. Call hook
+                    onBlur={(e) => triggerTranslation(e.target.value)}
                     value={infinitiv} onChange={(e) => setInfinitiv(e.target.value)}
-                    placeholder="z.B. gehen" required autoComplete="off"
+                    placeholder="z.B. gehen"
+                    required autoComplete="off"
                 />
             </div>
 
-            {/* --- Präteritum --- */}
             <div className={styles.fieldGroup}>
                 <label htmlFor="praeteritum">Präteritum</label>
                 <input
                     type="text" id="praeteritum" ref={praeteritumRef}
                     onKeyDown={(e) => handleKeyDown(e, 1)}
                     value={praeteritum} onChange={(e) => setPraeteritum(e.target.value)}
-                    placeholder="z.B. ging (leer lassen, wenn nicht vorhanden)" autoComplete="off"
+                    placeholder="z.B. ging"
+                    required autoComplete="off"
                 />
             </div>
 
-            {/* --- Perfekt --- */}
             <div className={styles.fieldGroup}>
                 <label htmlFor="perfekt">Perfekt</label>
                 <input
                     type="text" id="perfekt" ref={perfektRef}
                     onKeyDown={(e) => handleKeyDown(e, 2)}
                     value={perfekt} onChange={(e) => setPerfekt(e.target.value)}
-                    placeholder="z.B. gegangen (leer lassen, wenn nicht vorhanden)" autoComplete="off"
+                    placeholder="z.B. gegangen"
+                    required autoComplete="off"
                 />
             </div>
 
-            {/* --- Translation Field --- */}
             <div className={styles.fieldGroup}>
                 <label htmlFor="translation">Übersetzung (Bulgarisch)</label>
                 <input
@@ -126,7 +131,7 @@ const VerbForm: React.FC = () => {
                     onChange={(e) => setTranslation(e.target.value)}
                     placeholder={isLoading ? '...' : 'Wird automatisch ausgefüllt'}
                     disabled={isLoading}
-                    autoComplete="off"
+                    required autoComplete="off"
                 />
             </div>
 

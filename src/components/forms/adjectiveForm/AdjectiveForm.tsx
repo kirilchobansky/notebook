@@ -1,8 +1,8 @@
 import React, { useState, useRef, KeyboardEvent } from 'react';
-import styles from './adjectiveForm.module.css'; // We will create this next
+import styles from './adjectiveForm.module.css';
 import { AdjectiveWord } from '../../../types/words';
-import { addWord } from '../../../services/wordServices';
 import { useTranslation } from '../../../hooks/useTranslation';
+import { addWord } from '../../../services/wordServices';
 
 const AdjectiveForm: React.FC = () => {
     const [word, setWord] = useState('');
@@ -12,20 +12,26 @@ const AdjectiveForm: React.FC = () => {
         translation,
         setTranslation,
         isLoading,
+        isError,
         triggerTranslation
     } = useTranslation();
 
     const wordRef = useRef<HTMLInputElement>(null);
     const translationRef = useRef<HTMLInputElement>(null);
-
     const inputRefs = [wordRef, translationRef];
+
+    const handleWordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newWord = e.target.value;
+        setWord(newWord);
+        triggerTranslation(newWord);
+    };
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>, index: number) => {
         if (e.key === 'Enter' || e.key === 'ArrowDown') {
             e.preventDefault();
             const nextIndex = index + 1;
             if (nextIndex < inputRefs.length) {
-                inputRefs[nextIndex].current?.focus();
+                inputRefs[nextIndex]?.current?.focus();
             } else if (e.key === 'Enter') {
                 handleSubmit(e);
             }
@@ -33,7 +39,7 @@ const AdjectiveForm: React.FC = () => {
             e.preventDefault();
             const prevIndex = index - 1;
             if (prevIndex >= 0) {
-                inputRefs[prevIndex].current?.focus();
+                inputRefs[prevIndex]?.current?.focus();
             }
         }
     };
@@ -43,9 +49,10 @@ const AdjectiveForm: React.FC = () => {
         setError(null);
 
         const finalWord = word.trim().toLowerCase();
-        if (!finalWord) {
-            setError('Adjektiv darf nicht leer sein.');
-            wordRef.current?.focus();
+
+        if (!translation || translation.startsWith('Fehler:') || isError || isLoading) {
+            setError('Übersetzung darf nicht leer sein.');
+            translationRef.current?.focus();
             return;
         }
 
@@ -53,7 +60,7 @@ const AdjectiveForm: React.FC = () => {
             id: crypto.randomUUID(),
             type: 'adjective',
             word: finalWord,
-            translation: translation.replace('Fehler:', ''),
+            translation: translation,
         };
 
         try {
@@ -61,7 +68,6 @@ const AdjectiveForm: React.FC = () => {
             setWord('');
             setTranslation('');
             wordRef.current?.focus();
-
         } catch (error) {
             console.error("Failed to save word:", error);
             setError((error as Error).message);
@@ -70,21 +76,18 @@ const AdjectiveForm: React.FC = () => {
 
     return (
         <form className={styles.wordForm} onSubmit={handleSubmit}>
-
-            {/* --- Adjective --- */}
             <div className={styles.fieldGroup}>
                 <label htmlFor="adjective">Adjektiv</label>
                 <input
                     type="text" id="adjective" ref={wordRef}
                     onKeyDown={(e) => handleKeyDown(e, 0)}
-                    onBlur={(e) => triggerTranslation(e.target.value)} // Translate on blur
-                    value={word} onChange={(e) => setWord(e.target.value)}
+                    value={word}
+                    onChange={handleWordChange}
                     placeholder="z.B. schön"
                     required autoComplete="off"
                 />
             </div>
 
-            {/* --- Translation Field --- */}
             <div className={styles.fieldGroup}>
                 <label htmlFor="translation">Übersetzung (Bulgarisch)</label>
                 <input
@@ -94,7 +97,7 @@ const AdjectiveForm: React.FC = () => {
                     onChange={(e) => setTranslation(e.target.value)}
                     placeholder={isLoading ? '...' : 'Wird automatisch ausgefüllt'}
                     disabled={isLoading}
-                    autoComplete="off"
+                    required autoComplete="off"
                 />
             </div>
 
@@ -105,7 +108,6 @@ const AdjectiveForm: React.FC = () => {
             <button type="submit" className={styles.submitButton}>
                 Adjektiv hinzufügen
             </button>
-
         </form>
     );
 };

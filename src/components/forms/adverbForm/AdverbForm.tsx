@@ -1,5 +1,5 @@
 import React, { useState, useRef, KeyboardEvent } from 'react';
-import styles from './AdverbForm.module.css'; // We will create this next
+import styles from './AdverbForm.module.css';
 import { AdverbWord } from '../../../types/words';
 import { addWord } from '../../../services/wordServices';
 import { useTranslation } from '../../../hooks/useTranslation';
@@ -12,13 +12,19 @@ const AdverbForm: React.FC = () => {
         translation,
         setTranslation,
         isLoading,
+        isError,
         triggerTranslation
     } = useTranslation();
 
     const wordRef = useRef<HTMLInputElement>(null);
     const translationRef = useRef<HTMLInputElement>(null);
-
     const inputRefs = [wordRef, translationRef];
+
+    const handleWordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newWord = e.target.value;
+        setWord(newWord);
+        triggerTranslation(newWord);
+    };
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>, index: number) => {
         if (e.key === 'Enter' || e.key === 'ArrowDown') {
@@ -43,9 +49,10 @@ const AdverbForm: React.FC = () => {
         setError(null);
 
         const finalWord = word.trim().toLowerCase();
-        if (!finalWord) {
-            setError('Adverb darf nicht leer sein.');
-            wordRef.current?.focus();
+
+        if (!translation || translation.startsWith('Fehler:') || isError || isLoading) {
+            setError('Übersetzung darf nicht leer sein.');
+            translationRef.current?.focus();
             return;
         }
 
@@ -53,7 +60,7 @@ const AdverbForm: React.FC = () => {
             id: crypto.randomUUID(),
             type: 'adverb',
             word: finalWord,
-            translation: translation.replace('Fehler:', ''),
+            translation: translation,
         };
 
         try {
@@ -61,7 +68,6 @@ const AdverbForm: React.FC = () => {
             setWord('');
             setTranslation('');
             wordRef.current?.focus();
-
         } catch (error) {
             console.error("Failed to save word:", error);
             setError((error as Error).message);
@@ -71,20 +77,17 @@ const AdverbForm: React.FC = () => {
     return (
         <form className={styles.wordForm} onSubmit={handleSubmit}>
 
-            {/* --- Adverb --- */}
             <div className={styles.fieldGroup}>
                 <label htmlFor="adverb">Adverb</label>
                 <input
                     type="text" id="adverb" ref={wordRef}
                     onKeyDown={(e) => handleKeyDown(e, 0)}
-                    onBlur={(e) => triggerTranslation(e.target.value)} // Translate on blur
-                    value={word} onChange={(e) => setWord(e.target.value)}
+                    value={word} onChange={(e) => handleWordChange(e)}
                     placeholder="z.B. schnell"
                     required autoComplete="off"
                 />
             </div>
 
-            {/* --- Translation Field --- */}
             <div className={styles.fieldGroup}>
                 <label htmlFor="translation">Übersetzung (Bulgarisch)</label>
                 <input
@@ -94,7 +97,7 @@ const AdverbForm: React.FC = () => {
                     onChange={(e) => setTranslation(e.target.value)}
                     placeholder={isLoading ? '...' : 'Wird automatisch ausgefüllt'}
                     disabled={isLoading}
-                    autoComplete="off"
+                    required autoComplete="off"
                 />
             </div>
 

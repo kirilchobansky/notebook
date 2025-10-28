@@ -51,7 +51,6 @@ const NounForm: React.FC = () => {
         e.preventDefault();
         setError(null);
 
-        // 1. Validation
         const formattedArticle = article.trim().toLowerCase();
         if (!['der', 'die', 'das'].includes(formattedArticle)) {
             setError('Artikel muss "der", "die" oder "das" sein.');
@@ -65,12 +64,10 @@ const NounForm: React.FC = () => {
             return;
         }
 
-        // 2. Formatting
         const finalArticle = formattedArticle;
         const finalSingular = capitalize(formattedSingular);
         const finalPlural = capitalize(plural.trim()) || null;
 
-        // 3. Create Word Object
         const newNoun: NounWord = {
             id: crypto.randomUUID(),
             type: 'noun',
@@ -80,14 +77,18 @@ const NounForm: React.FC = () => {
             translation: translation.replace('Fehler:', ''),
         };
 
-        // 4. SAVE
+        if (!translation || translation.startsWith('Fehler:') || isLoading) {
+            setError('Übersetzung darf nicht leer sein.');
+            translationRef.current?.focus();
+            return;
+        }
+
         try {
             await addWord(newNoun);
-            // Clear form
             setArticle('');
             setSingular('');
             setPlural('');
-            setTranslation(''); // <-- 3. Use setter from hook
+            setTranslation('');
             articleRef.current?.focus();
 
         } catch (error) {
@@ -98,7 +99,6 @@ const NounForm: React.FC = () => {
 
     return (
         <form className={styles.wordForm} onSubmit={handleSubmit}>
-            {/* --- Artikel (Article) --- */}
             <div className={styles.fieldGroup}>
                 <label htmlFor="article">Artikel</label>
                 <input
@@ -109,19 +109,17 @@ const NounForm: React.FC = () => {
                 />
             </div>
 
-            {/* --- Singular (The Word) --- */}
             <div className={styles.fieldGroup}>
                 <label htmlFor="singular">Singular</label>
                 <input
                     type="text" id="singular" ref={singularRef}
                     onKeyDown={(e) => handleKeyDown(e, 1)}
-                    onBlur={(e) => triggerTranslation(e.target.value)} // <-- 4. Call hook
+                    onBlur={(e) => triggerTranslation(e.target.value)}
                     value={singular} onChange={(e) => setSingular(e.target.value)}
                     placeholder="z.B. Tisch" required autoComplete="off"
                 />
             </div>
 
-            {/* --- Plural --- */}
             <div className={styles.fieldGroup}>
                 <label htmlFor="plural">Plural</label>
                 <input
@@ -132,26 +130,23 @@ const NounForm: React.FC = () => {
                 />
             </div>
 
-            {/* --- Translation Field --- */}
             <div className={styles.fieldGroup}>
                 <label htmlFor="translation">Übersetzung (Bulgarisch)</label>
                 <input
                     type="text" id="translation" ref={translationRef}
                     onKeyDown={(e) => handleKeyDown(e, 3)}
-                    value={translation} // <-- 5. State from hook
-                    onChange={(e) => setTranslation(e.target.value)} // <-- 5. State from hook
-                    placeholder={isLoading ? '...' : 'Wird automatisch ausgefüllt'} // <-- 5. State from hook
-                    disabled={isLoading} // <-- 5. State from hook
+                    value={translation}
+                    onChange={(e) => setTranslation(e.target.value)}
+                    placeholder={isLoading ? '...' : 'Wird automatisch ausgefüllt'}
+                    disabled={isLoading}
                     autoComplete="off"
                 />
             </div>
 
-            {/* --- Error Message Area --- */}
             <div className={styles.errorContainer}>
                 {error && <p className={styles.errorMessage}>{error}</p>}
             </div>
 
-            {/* --- Submit Button --- */}
             <button type="submit" className={styles.submitButton}>
                 Nomen hinzufügen
             </button>

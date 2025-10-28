@@ -1,5 +1,5 @@
 import { LazyStore } from '@tauri-apps/plugin-store';
-import { Word } from '../types/words'; // Use our shared types
+import { Word } from '../types/words'; 
 
 
 const store = new LazyStore('wortliste.dat');
