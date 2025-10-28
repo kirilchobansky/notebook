@@ -12,8 +12,7 @@ const WordListPage: React.FC = () => {
         searchTerm,
         setSearchTerm,
         filteredWords,
-        handleDelete,
-        words
+        handleDelete
     } = useWordList();
 
     if (loading) {
@@ -24,7 +23,7 @@ const WordListPage: React.FC = () => {
         <div className={styles.container}>
             <div className={styles.header}>
                 <h1>Deine Wortliste</h1>
-                <span>({words.length})</span>
+                <span>({filteredWords.length})</span>
                 <input
                     type="text"
                     placeholder="Suchen..."

@@ -1,16 +1,21 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 2rem 3rem;
 }
 
 .header {
+  position: sticky;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1rem;
   margin-bottom: 2rem;
   border-bottom: 2px solid var(--border-color);
   padding-bottom: 1.5rem;
+  top: 0;
+  background-color: var(--background-color);
+  z-index: 10;
 }
 
 .header span {
