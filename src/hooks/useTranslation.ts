@@ -20,7 +20,7 @@ export const useTranslation = () => {
                 from: 'de',
                 to: 'bg'
             });
-            setTranslation(translatedText);
+            setTranslation(translatedText.toLowerCase());
         } catch (error) {
             console.error("Translation error from Rust:", error);
             setTranslation(`Fehler: ${error}`);
