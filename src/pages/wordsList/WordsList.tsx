@@ -57,10 +57,10 @@ const WordListPage: React.FC = () => {
                         ) : (
                             filteredWords.map((word) => (
                                 <tr key={word.id}>
-                                    {word.type === 'noun' && <NounRow word={word} />}
-                                    {word.type === 'verb' && <VerbRow word={word} />}
-                                    {word.type === 'adverb' && <AdverbRow word={word} />}
-                                    {word.type === 'adjective' && <AdjectiveRow word={word} />}
+                                    {word.type === 'noun' && <NounRow word={word} searchTerm={searchTerm} />}
+                                    {word.type === 'verb' && <VerbRow word={word} searchTerm={searchTerm}/>}
+                                    {word.type === 'adverb' && <AdverbRow word={word} searchTerm={searchTerm}/>}
+                                    {word.type === 'adjective' && <AdjectiveRow word={word} searchTerm={searchTerm}/>}
 
                                     <td>
                                         <button
