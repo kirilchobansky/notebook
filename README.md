@@ -2,7 +2,7 @@
 
 A simple and fast desktop notebook for building your personal German vocabulary. Save and organize nouns, verbs, adjectives, and adverbs all in one place. This app is designed for a seamless, fast user experience, helping you focus on learning.
 
-![Add Word Form](/public/noun-form.png) ![Word List](/public/list-page.png)
+![Add Word Form](frondend/public/noun-form.png) ![Word List](frondend/public/list-page.png)
 
 ---
 
