@@ -9,8 +9,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<MainLayout />}>
-          <Route index element={<Navigate replace to="/add/noun" />} />
-          <Route path="add/:wordType" element={<AddWordPage />} />
+          <Route index element={<Navigate replace to="/translate" />} />
+          <Route path="/translate" element={<AddWordPage />} />
           <Route path="/list" element={<WordsListPage />} />
         </Route>
       </Routes>

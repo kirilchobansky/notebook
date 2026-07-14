@@ -1,0 +1,48 @@
+.translateContainer {
+  display: flex;
+  width: 100%;
+  max-width: 800px; 
+  margin: 2rem auto;
+  border: 1px solid var(--border-color); 
+  border-radius: 12px; 
+  background-color: var(--secondary-bg); 
+}
+
+.languageSection {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.languageSection:first-child {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.languageHeader {
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  color: var(--text-color); 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.textArea {
+  min-height: 150px;
+  padding: 1rem 1.25rem;
+  font-size: 1.1rem;
+  color: var(--text-color); 
+  background-color: transparent; 
+  border: none;
+  resize: none;
+  font-family: inherit;
+}
+
+.textArea:focus {
+  outline: none;
+}
+
+.textArea::placeholder {
+  color: var(--text-color); 
+  opacity: 0.5;
+}

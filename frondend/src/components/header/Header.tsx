@@ -9,17 +9,8 @@ const Header: React.FC = () => {
     return (
         <header className={styles.header}>
             <nav className={styles.navLinks}>
-                <NavLink to="/add/noun" className={getNavLinkClass}>
-                    Nomen
-                </NavLink>
-                <NavLink to="/add/adjective" className={getNavLinkClass}>
-                    Adjektiv
-                </NavLink>
-                <NavLink to="/add/adverb" className={getNavLinkClass}>
-                    Adverb
-                </NavLink>
-                <NavLink to="/add/verb" className={getNavLinkClass}>
-                    Verb
+                <NavLink to="/translate" className={getNavLinkClass}>
+                    Translate
                 </NavLink>
             </nav>
 
